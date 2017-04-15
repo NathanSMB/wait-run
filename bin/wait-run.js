@@ -67,7 +67,9 @@ delay = program.delay || 0;
 /**
  * Watch.
  */
-var watch = new Gaze(program.pattern);
+var watch = new Gaze(program.pattern, {
+	mode: "poll"
+});
 watch.on('all', execute);
 watch.on('nomatch', nomatch);
 
@@ -104,10 +106,12 @@ function nomatch() {
 	}
 
 	setTimeout(function () {
-		watch = new Gaze(program.pattern);
+		watch = new Gaze(program.pattern, {
+			mode: "poll"
+		});
 		watch.on('all', execute);
 		watch.on('nomatch', nomatch); // Recursion
-		watch.on('ready', function(watcher) { 
+		watch.on('ready', function(watcher) {
 			var keys = Object.keys(watcher._watched);
 			if (keys && keys.length) {
 				execute('added', watcher._watched[keys[0]]);
